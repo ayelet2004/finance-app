@@ -14,23 +14,28 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST2 }}
-          username: ${{ secrets.EC2_USER || 'ubuntu' }}
+          username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY2 }}
           script: |
-            echo "🔁 Pull latest code"
+            set -e
+
+            echo "🔁 Sync code with origin/main"
             cd /home/ubuntu/finance-app
-            git pull origin main
+            git fetch origin
+            git reset --hard origin/main
 
             echo "💻 Build frontend"
-            cd /home/ubuntu/finance-app/client
-            npm install
+            cd client
+            npm ci
             npm run build
 
             echo "🚀 Deploy frontend to /var/www/html"
             sudo rm -rf /var/www/html/*
             sudo cp -r dist/* /var/www/html/
 
-            echo "🔄 Restart backend service via systemd"
+            echo "🔄 Restart backend service"
             sudo systemctl restart finance.service
             sudo systemctl status finance.service --no-pager
+
             echo "✅ Deployment completed successfully"
+
