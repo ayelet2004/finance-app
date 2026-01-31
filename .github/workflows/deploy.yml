@@ -17,6 +17,8 @@ jobs:
           username: ${{ secrets.EC2_USER || 'ubuntu' }}
           key: ${{ secrets.EC2_SSH_KEY2 }}
           script: |
+            set -x
+            
             echo "🔁 Pull latest code"
             cd /home/ubuntu/finance-app
             git pull origin main
