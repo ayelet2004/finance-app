@@ -17,15 +17,16 @@ jobs:
           username: ${{ secrets.EC2_USER || 'ubuntu' }}
           key: ${{ secrets.EC2_SSH_KEY2 }}
           script: |
-            set -x
+            set -e
             
             echo "🔁 Pull latest code"
             cd /home/ubuntu/finance-app
-            git pull origin main
+            git fetch origin
+            git reset --hard origin/main
 
             echo "💻 Build frontend"
             cd /home/ubuntu/finance-app/client
-            npm install
+            npm ci
             npm run build
 
             echo "🚀 Deploy frontend to /var/www/html"
