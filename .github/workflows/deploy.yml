@@ -11,10 +11,10 @@ jobs:
 
     steps:
       - name: Deploy to EC2 and Restart Service
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST2 }}
-          username: ${{ secrets.EC2_USER || 'ubuntu' }}
+          username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY2 }}
           script: |
             set -e
